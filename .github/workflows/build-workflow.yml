@@ -6,13 +6,17 @@ on:
 
 jobs:
     build:
+        name: "Python Build"
         runs-on: ubuntu-latest
         strategy:
             matrix:
                 python-version: ["3.12"]
 
         steps:
-        # - uses: actions/checkout@v5
+        -   id: checkout
+            name: Checkout
+            uses: actions/checkout@v5
+
         -   id: setup-python
             name: Set up Python ${{ matrix.python-version }}
             uses: actions/setup-python@v5
@@ -23,8 +27,10 @@ jobs:
             name: Display Python version
             run: python -c "import sys; print(sys.version)"
 
-        -   id: install-dependencies
-            name: Install Dependencies from requirements.txt
+        -   id: setup-pip
+            name: Virtual Environment and Build + Install
             run: |
-                python -m pip --upgrade pip
+                python -m venv python_venv
+                source python_venv/bin/activate && echo "The virtual env path is $VIRTUAL_ENV"
+                python -m pip install --upgrade pip
                 python -m pip install -r $GITHUB_WORKSPACE/requirements.txt
