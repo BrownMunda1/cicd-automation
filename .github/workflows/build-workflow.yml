@@ -1,33 +1,30 @@
-name: snapshot-workflow
+name: build-workflow
+run-name: Build Workflow
 
 on:
   push:
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     # if: in what case should the workflow should be run
-#     name: name of workflow
-
-#     steps:
-#       - id: unique-id-of-a-step
-#         name: display name of a workflow
-#         run:
-#           <your code to run the step>
 jobs:
     build:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                python-version: ["pypy3.10", "3.9", "3.10", "3.11", "3.12", "3.13"]
+                python-version: ["3.12"]
 
         steps:
         # - uses: actions/checkout@v5
-        - id: setup-python
-          name: Set up Python ${{ matrix.python-version }}
-          uses: actions/setup-python@v5
-          with:
-            python-version: ${{ matrix.python-version }}
+        -   id: setup-python
+            name: Set up Python ${{ matrix.python-version }}
+            uses: actions/setup-python@v5
+            with:
+                python-version: ${{ matrix.python-version }}
 
-        - name: Display Python version
-          run: python -c "import sys; print(sys.version)"
+        -   id: display-version
+            name: Display Python version
+            run: python -c "import sys; print(sys.version)"
+
+        -   id: install-dependencies
+            name: Install Dependencies from requirements.txt
+            run: |
+                python -m pip --upgrade pip
+                python -m pip install -r $GITHUB_WORKSPACE/requirements.txt
