@@ -1,0 +1,18 @@
+name: snapshot-workflow
+
+on:
+  push:
+
+jobs:
+  <name_of_job>:
+    runs-on: ubuntu-latest
+    # if: #in what case should the workflow should be run
+    name: name of workflow
+
+    steps:
+      - id: unique-id-of-a-step
+        name: display name of a workflow
+        # uses: if you want to reuse any other shit
+        # with: inputs for the reusable shit
+        run:
+          <your code to run the step>
