@@ -39,6 +39,7 @@ jobs:
             uses: astral-sh/setup-uv@v6
             with:
                 version: "latest"
+
         -   id: display-uv-version
             name: Display uv version
             run: uv --version
@@ -46,6 +47,11 @@ jobs:
         -   id: uv-build
             name: uv virtual environment, build and install
             run: |
-                echo "Building the project using pyproject.toml"
-                uv build
+                echo "Running uv sync for installing all packages in virutal environment from pyproject.toml file"
+                uv sync
 
+                echo "Falling back to requirements.txt if not present in pyproject.toml"
+                uv add -r requirements.txt
+
+                echo "Running uv build for creating whl files"
+                uv build
