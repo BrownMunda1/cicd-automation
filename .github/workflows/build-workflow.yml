@@ -42,3 +42,10 @@ jobs:
         -   id: display-uv-version
             name: Display uv version
             run: uv --version
+            
+        -   id: uv-build
+            name: uv virtual environment, build and install
+            run: |
+                echo "Building the project using pyproject.toml"
+                uv build
+
