@@ -4,6 +4,9 @@ run-name: Build Workflow
 on:
   push:
 
+permissions:
+    models: read
+
 jobs:
     build:
         name: "Python Build"
@@ -23,14 +26,6 @@ jobs:
         -   id: display-version
             name: Display Python version
             run: python -c "import sys; print(sys.version)"
-
-        # -   id: setup-pip
-        #     name: Virtual Environment and Build + Install
-        #     run: |
-        #         python -m venv python_venv
-        #         source python_venv/bin/activate && echo "The virtual env path is $VIRTUAL_ENV"
-        #         python -m pip install --upgrade pip
-        #         python -m pip install -r $GITHUB_WORKSPACE/requirements.txt
 
         -   id: setup-uv
             uses: astral-sh/setup-uv@v6
