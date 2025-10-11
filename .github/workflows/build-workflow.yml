@@ -49,7 +49,8 @@ jobs:
 
                 echo "Running uv build for creating whl files"
                 uv build
+
         -   id: get-changed-files
             name: Get Changed Files
             run: |
-                echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | xargs)"
+                echo "git diff --name-only ${{ github.event.before }} ${{ github.sha }}"
