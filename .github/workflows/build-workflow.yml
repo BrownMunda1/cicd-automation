@@ -53,4 +53,13 @@ jobs:
         -   id: get-changed-files
             name: Get Changed Files
             run: |
-                git diff --name-only ${{ github.event.before }} ${{ github.sha }}
+                temp=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
+                echo type(temp)
+
+                echo "declare -p temp:"
+                declare -p temp || true
+
+                mapfile -t files < <(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
+                echo "declare -p files:"
+                declare -p files
+                echo "files count: ${#files[@]}"
