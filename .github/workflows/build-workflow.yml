@@ -53,4 +53,4 @@ jobs:
         -   id: get-changed-files
             name: Get Changed Files
             run: |
-                echo "git diff --name-only ${{ github.event.before }} ${{ github.sha }}"
+                git diff --name-only ${{ github.event.before }} ${{ github.sha }}
