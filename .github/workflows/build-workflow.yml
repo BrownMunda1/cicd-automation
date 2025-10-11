@@ -54,7 +54,6 @@ jobs:
             name: Get Changed Files
             run: |
                 temp=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
-                echo type(temp)
 
                 echo "declare -p temp:"
                 declare -p temp || true
