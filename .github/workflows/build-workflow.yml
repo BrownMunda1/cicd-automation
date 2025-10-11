@@ -58,9 +58,9 @@ jobs:
                 MONOREPO1=false
                 MONOREPO2=false
                 for FILE in $temp; do
-                    if [["$FILE" == src/monorepo1/*]]; then
+                    if [[ "$FILE" == src/monorepo1/* ]]; then
                         MONOREPO1=true
-                    elif [["$FILE" == src/monorepo2/*]]; then
+                    elif [[ "$FILE" == src/monorepo2/* ]]; then
                         MONOREPO2=true
                     fi
                 done
