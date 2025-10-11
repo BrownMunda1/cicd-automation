@@ -5,7 +5,7 @@ on:
   push:
 
 permissions:
-    models: read
+    contents: read
 
 jobs:
     build:
@@ -16,6 +16,8 @@ jobs:
         -   id: checkout
             name: Checkout
             uses: actions/checkout@v5
+            with:
+                fetch-depth: 0
 
         -   id: setup-python
             name: Set up Python 3.12
@@ -47,3 +49,7 @@ jobs:
 
                 echo "Running uv build for creating whl files"
                 uv build
+        -   id: get-changed-files
+            name: Get Changed Files
+            run: |
+                echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | xargs)"
