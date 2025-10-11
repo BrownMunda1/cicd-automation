@@ -54,11 +54,24 @@ jobs:
             name: Get Changed Files
             run: |
                 temp=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
+                
+                MONOREPO1=false
+                MONOREPO2=false
+                for FILE in $temp; do
+                    if [["$FILE" == src/monorepo1/*]]; then
+                        MONOREPO1=true
+                    elif [["$FILE" == src/monorepo2/*]]; then
+                        MONOREPO2=true
+                    fi
+                done
 
-                echo "declare -p temp:"
-                declare -p temp || true
+                echo "Is Monorepo1 Changed? $MONOREPO1" >> $GITHUB_OUTPUT
+                echo "Is Monorepo2 Changed? $MONOREPO2" >> $GITHUB_OUTPUT
 
-                mapfile -t files < <(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
-                echo "declare -p files:"
-                declare -p files
-                echo "files count: ${#files[@]}"
+                # echo "declare -p temp:"
+                # declare -p temp || true
+
+                # mapfile -t files < <(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
+                # echo "declare -p files:"
+                # declare -p files
+                # echo "files count: ${#files[@]}"
