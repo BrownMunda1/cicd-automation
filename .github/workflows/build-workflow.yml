@@ -65,8 +65,8 @@ jobs:
                     fi
                 done
 
-                echo "Is Monorepo1 Changed? $MONOREPO1" >> $GITHUB_OUTPUT
-                echo "Is Monorepo2 Changed? $MONOREPO2" >> $GITHUB_OUTPUT
+                echo "Is Monorepo1 Changed? $MONOREPO1"
+                echo "Is Monorepo2 Changed? $MONOREPO2"
 
                 # echo "declare -p temp:"
                 # declare -p temp || true
