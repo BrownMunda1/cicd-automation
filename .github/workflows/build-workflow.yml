@@ -71,16 +71,23 @@ jobs:
                 python -m venv python_venv
                 source python_venv/bin/activate
                 echo "Virtual Environment Created"
-                python -m pip install build
 
         -   id: build-individual-projects
             name: Build Projects
             run: |
                 source python_venv/bin/activate
                 for REPO in ${{ env.REPOS_CHANGED }}; do
-                    echo "$REPO"
+
                     cd src/$REPO
-                    python -m build
+
+                    uv sync --active
+
+                    if [ -e requirements.txt ] then
+                        uv add -r requirements.txt
+                    fi
+
+                    uv build
+
                     cd ..
                     echo "$REPO Built successfully"
                 done
