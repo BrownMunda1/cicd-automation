@@ -65,20 +65,13 @@ jobs:
 
                 echo "REPOS_CHANGED=$repos_changed" >> $GITHUB_OUTPUT
 
-        -   id: install-packages
-            name: Install essential Packages
-            run: |
-                python -m venv python_venv
-                source python_venv/bin/activate
-                echo "Virtual Environment Created"
-
         -   id: build-individual-projects
             name: Build Projects
             run: |
                 source python_venv/bin/activate
                 for REPO in ${{ steps.get-changed-repos.outputs.REPOS_CHANGED }}; do
                     cd src/$REPO
-                    uv sync --active
+                    uv sync
                     if [ -e requirements.txt ]; then
                         uv add -r requirements.txt
                     fi
@@ -86,10 +79,3 @@ jobs:
                     cd ..
                     echo "$REPO Built successfully"
                 done
-
-        -   id: cleanup
-            name: Clean Up Environment
-            run: |
-                echo "Delete Virtual Environment"
-                source python_venv/bin/deactivate
-                rm -rf python_venv

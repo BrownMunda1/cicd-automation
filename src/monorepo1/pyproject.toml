@@ -8,5 +8,5 @@ dynamic = ["version"]
 requires-python = ">=3.12"
 description = "This is a python monorepo1 for testing"
 dependencies = [
-
+    
 ]
