@@ -66,11 +66,13 @@ jobs:
                     fi
                 done
 
-                echo "REPOS CHANGED: $repos_changed" >> $GITHUB_ENV
+                echo "REPOS_CHANGED=$repos_changed" >> $GITHUB_ENV
         -   id: build-individual-projects
             name: Build Projects
             run: |
-                echo "$repos_changed"
-                for REPO in $repos_changed; do
+                echo "${{ env.REPOS_CHANGED }}"
+                for REPO in ${{ env.REPOS_CHANGED }}; do
                     cd REPO
                     python -m build
+                    cd ..
+                    echo "$(REPO) Built successfully"
