@@ -80,6 +80,7 @@ jobs:
             name: Build Projects
             run: |
                 echo "${{ env.REPOS_CHANGED }}"
+                source python_venv/bin/activate
                 for REPO in ${{ env.REPOS_CHANGED }}; do
                     cd src/$(REPO)
                     python -m build
