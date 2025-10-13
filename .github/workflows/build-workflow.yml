@@ -76,3 +76,4 @@ jobs:
                     python -m build
                     cd ..
                     echo "$(REPO) Built successfully"
+                done
