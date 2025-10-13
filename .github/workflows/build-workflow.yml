@@ -72,7 +72,7 @@ jobs:
             run: |
                 echo "${{ env.REPOS_CHANGED }}"
                 for REPO in ${{ env.REPOS_CHANGED }}; do
-                    cd REPO
+                    cd src/$(REPO)
                     python -m build
                     cd ..
                     echo "$(REPO) Built successfully"
