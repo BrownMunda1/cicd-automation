@@ -91,5 +91,5 @@ jobs:
             name: Clean Up Environment
             run: |
                 echo "Delete Virtual Environment"
-                deactivate
+                source python_venv/bin/deactivate
                 rm -rf python_venv
