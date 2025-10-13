@@ -50,17 +50,14 @@ jobs:
                 echo "Running uv build for creating whl files"
                 uv build
 
-        -   id: get-changed-files
-            name: Get Changed Files
+        -   id: get-changed-repos
+            name: Get Changed Repositories
             run: |
                 temp=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
-                
-                # MONOREPO1=false
-                # MONOREPO2=false
+
                 repos_changed=()
                 for FILE in $temp; do
                     if [[ "$FILE" == src/* ]]; then
-                        # MONOREPO1=true
                         IFS='/'; arrIN=($FILE); unset IFS;
                         repos_changed+=( ${arrIN[1]} )
                     fi
@@ -87,3 +84,12 @@ jobs:
                     cd ..
                     echo "$REPO Built successfully"
                 done
+
+        -   id: cleanup
+            name: Clean Up Environment
+            run: |
+                echo "Delete Virtual Environment"
+                deactivate
+                rm -rf python_venv
+                echo "Delete Environment Variables"
+                unset REPOS_CHANGED
