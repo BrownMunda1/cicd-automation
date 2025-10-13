@@ -55,18 +55,18 @@ jobs:
             run: |
                 temp=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
                 
-                MONOREPO1=false
-                MONOREPO2=false
+                # MONOREPO1=false
+                # MONOREPO2=false
+                repos_changed=()
                 for FILE in $temp; do
-                    if [[ "$FILE" == src/monorepo1/* ]]; then
-                        MONOREPO1=true
-                    elif [[ "$FILE" == src/monorepo2/* ]]; then
-                        MONOREPO2=true
+                    if [[ "$FILE" == src/* ]]; then
+                        # MONOREPO1=true
+                        IFS='/'; arrIN=($FILE); unset IFS;
+                        repos_changed+=( ${arrIN[1]} )
                     fi
                 done
 
-                echo "Is Monorepo1 Changed? $MONOREPO1"
-                echo "Is Monorepo2 Changed? $MONOREPO2"
+                echo "REPOS CHANGED: $repos_changed"
 
                 # echo "declare -p temp:"
                 # declare -p temp || true
