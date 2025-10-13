@@ -75,6 +75,7 @@ jobs:
                         uv add -r requirements.txt
                     fi
                     uv build
+                    python -m main I-am-Ankit
                     cd ..
                     echo "$REPO Built successfully"
                 done
