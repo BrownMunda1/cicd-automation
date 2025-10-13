@@ -67,6 +67,15 @@ jobs:
                 done
 
                 echo "REPOS_CHANGED=$repos_changed" >> $GITHUB_ENV
+
+        -   id: install-packages
+            name: Install essential Packages
+            run: |
+                python -m venv python_venv
+                source python_venv/bin/activate
+                echo "Virtual Environment Created"
+                python -m pip install build
+
         -   id: build-individual-projects
             name: Build Projects
             run: |
