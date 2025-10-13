@@ -45,7 +45,9 @@ jobs:
                 uv sync
 
                 echo "Falling back to requirements.txt if not present in pyproject.toml"
-                uv add -r requirements.txt
+                if [ -e requirements.txt ]; then
+                    uv add -r requirements.txt
+                fi
 
                 echo "Running uv build for creating whl files"
                 uv build
