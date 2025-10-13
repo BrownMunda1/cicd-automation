@@ -39,7 +39,7 @@ jobs:
             run: uv --version
 
         -   id: uv-build
-            name: uv virtual environment, build and install
+            name: UV virtual environment, build and install
             run: |
                 echo "Running uv sync for installing all packages in virutal environment from pyproject.toml file"
                 uv sync
@@ -53,8 +53,8 @@ jobs:
         -   id: get-changed-repos
             name: Get Changed Repositories
             run: |
-                temp=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
-
+                temp=$(git diff "${{ github.event.before }}" "${{ github.sha }}")
+                echo "Github Difference from last commit = $temp"
                 repos_changed=()
                 for FILE in $temp; do
                     if [[ "$FILE" == src/* ]]; then
