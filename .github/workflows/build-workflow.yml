@@ -79,12 +79,11 @@ jobs:
         -   id: build-individual-projects
             name: Build Projects
             run: |
-                echo "${{ env.REPOS_CHANGED }}"
                 source python_venv/bin/activate
                 for REPO in ${{ env.REPOS_CHANGED }}; do
                     echo "$REPO"
                     cd src/$REPO
                     python -m build
                     cd ..
-                    echo "$(REPO) Built successfully"
+                    echo "$REPO Built successfully"
                 done
