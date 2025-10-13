@@ -75,7 +75,7 @@ jobs:
                         uv add -r requirements.txt
                     fi
                     uv build
-                    temp=$(python -m main I-am-Ankit)
+                    temp=$(python -m main I am Ankit)
                     echo "Python Script Answer: $temp"
                     cd ..
                     echo "$REPO Built successfully"
