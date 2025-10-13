@@ -79,7 +79,7 @@ jobs:
                 for REPO in ${{ steps.get-changed-repos.outputs.REPOS_CHANGED }}; do
                     cd src/$REPO
                     uv sync --active
-                    if [ -e requirements.txt ] then
+                    if [ -e requirements.txt ]; then
                         uv add -r requirements.txt
                     fi
                     uv build
