@@ -66,12 +66,11 @@ jobs:
                     fi
                 done
 
-                echo "REPOS CHANGED: $repos_changed"
-
-                # echo "declare -p temp:"
-                # declare -p temp || true
-
-                # mapfile -t files < <(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
-                # echo "declare -p files:"
-                # declare -p files
-                # echo "files count: ${#files[@]}"
+                echo "REPOS CHANGED: $repos_changed" >> $GITHUB_ENV
+        -   id: build-individual-projects
+            name: Build Projects
+            run: |
+                echo "$repos_changed"
+                for REPO in $repos_changed; do
+                    cd REPO
+                    python -m build
