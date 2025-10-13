@@ -5,4 +5,4 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "monorepo1"
 dynamic = ["version"]
-description = "This is a python monorepo for testing"
+description = "This is a python monorepo1 for testing"
