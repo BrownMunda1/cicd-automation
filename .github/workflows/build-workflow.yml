@@ -70,22 +70,16 @@ jobs:
                         const timeb = b.head_commit.timestamp;
                         return timeb-timea;
                     });
-                    const lastSuccessfulWorkflow = workflowRuns.find(workflow => workflow.status == "completed" && workflow.conclusion == "success")
+                    const lastSuccessfulWorkflow = workflowRuns.find(workflow => workflow.status === "completed" && workflow.conclusion === "success")
                     return lastSuccessfulWorkflow.head_sha
-
-        -   id: checker-of-last-successful-workflow-trigger
-            name: Check of last successful workflow trigger
-            run: |
-                echo "The output of the script of last successful workflow is ${{ steps.get-last-successful-workflow-run.outputs.result }}" 
 
         -   id: get-changed-repos
             name: Get Changed Repositories
             run: |
-                temp=$(git diff "${{ github.event.before }}" "${{ github.sha }}")
+                temp=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
                 echo "Github Difference from last commit = $temp"
                 result=$(python -m src.main "$temp")
                 echo "GIT DIFF: $result"
-                # First find the last successful workflow. Get the git diff of it with the current commit. Pass the diff to python script, which uses langchain or anything to process it and give back the repositories to run the builds for, and pass it to the next step
                 repos_changed=()
                 for FILE in $temp; do
                     if [[ "$FILE" == src/* ]]; then
