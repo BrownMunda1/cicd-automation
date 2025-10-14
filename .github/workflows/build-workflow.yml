@@ -71,7 +71,7 @@ jobs:
                         return timeb-timea;
                     });
                     return workflowRuns;
-                    const lastSuccessfulWorkflow = workflowRuns.find(workflow => workflow.status === "completed" && workflow.conclusion === "success")
+                    const lastSuccessfulWorkflow = workflowRuns.find(workflow => workflow.status == "completed" && workflow.conclusion == "success")
                     return lastSuccessfulWorkflow.head_sha
 
         -   id: checker-of-last-successful-workflow-trigger
