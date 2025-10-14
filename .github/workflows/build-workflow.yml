@@ -77,6 +77,14 @@ jobs:
             name: Get Changed Repositories
             run: |
                 temp=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
+
+
+
+                # Get the names of all the files changed. Filter out non-important ones manually. Then Provide each file's content to LLM individually, and let it analyse if it contributes in the build or not. If yes, then build it, if not then leave it as it is.
+
+
+
+
                 echo "Github Difference from last commit = $temp"
                 result=$(python -m src.main "$temp")
                 echo "GIT DIFF: $result"
