@@ -71,7 +71,7 @@ jobs:
                         return timeb-timea;
                     });
                     const lastSuccessfulWorkflow = workflowRuns.find(workflow => workflow.head_sha)
-                    return lastSuccessfulWorkflow
+                    return lastSuccessfulWorkflow.head_sha
 
         -   id: checker-of-last-successful-workflow-trigger
             name: Check of last successful workflow trigger
