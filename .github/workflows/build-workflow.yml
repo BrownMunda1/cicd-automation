@@ -70,13 +70,14 @@ jobs:
                         const timeb = b.head_commit.timestamp;
                         return timeb-timea;
                     });
-                    const lastSuccessfulWorkflow = workflowRuns.find(workflow => workflow.status == "success")
-                    return lastSuccessfulWorkflow.head_sha
+                    return workflowRuns;
+                    # const lastSuccessfulWorkflow = workflowRuns.find(workflow => workflow.status === "success")
+                    # return lastSuccessfulWorkflow.head_sha
 
         -   id: checker-of-last-successful-workflow-trigger
             name: Check of last successful workflow trigger
             run: |
-                echo "The output of the script of last successful workflow is ${{ steps.get-last-successful-workflow-run.outputs.result }}" 
+                echo "python -m src.main ${{ steps.get-last-successful-workflow-run.outputs.result }}" 
 
         -   id: get-changed-repos
             name: Get Changed Repositories
