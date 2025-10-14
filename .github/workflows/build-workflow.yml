@@ -52,6 +52,32 @@ jobs:
                 echo "Running uv build for creating whl files"
                 uv build
 
+        -   id: get-last-successful-workflow-run
+            name: Get last Successful Workflow Run
+            uses: actions/github-script@v8
+            with:
+                script: |
+                    const { owner, repo } = context.repo;
+                    const runs = await github.rest.actions.listWorkflowRunsForRepo({
+                        owner,
+                        repo,
+                        per_page: 100
+                    })
+                    
+                    const workflowRuns = runs.data.workflow_runs;
+                    workflowRuns.sort((a,b) => {
+                        const timea = a.head_commit.timestamp;
+                        const timeb = b.head_commit.timestamp;
+                        return timeb-timea;
+                    });
+                    const lastSuccessfulWorkflow = workflowRuns.find(workflow => workflow.head_sha)
+                    return lastSuccessfulWorkflow
+
+        -   id: checker-of-last-successful-workflow-trigger
+            name: Check of last successful workflow trigger
+            run: |
+                echo "The output of the script of last successful workflow is ${{ steps.get-last-successful-workflow-run.outputs.result }}" 
+
         -   id: get-changed-repos
             name: Get Changed Repositories
             run: |
