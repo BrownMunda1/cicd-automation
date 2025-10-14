@@ -70,7 +70,7 @@ jobs:
                         const timeb = b.head_commit.timestamp;
                         return timeb-timea;
                     });
-                    const lastSuccessfulWorkflow = workflowRuns.find(workflow => workflow.head_sha)
+                    const lastSuccessfulWorkflow = workflowRuns.find(workflow => workflow.status == "success")
                     return lastSuccessfulWorkflow.head_sha
 
         -   id: checker-of-last-successful-workflow-trigger
