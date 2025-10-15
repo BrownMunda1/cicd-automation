@@ -78,18 +78,21 @@ jobs:
             run: |
 
                 files_changed=$(git diff --name-status "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
-                echo "Printing changed files names and status"
-                python -m src.main --files-changed "$files_changed"
+                # echo "Printing changed files names and status"
+                # python -m src.main --files-changed "$files_changed"
+                temp=$(git diff --unified=0 --no-prefix --diff-filter=M "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
+                echo "Printing modified files=$temp"
 
                 temp=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
+                echo "Printing all changed files=$temp"
 
 
                 # Get the names of all the files changed. Filter out non-important ones manually. Then Provide each file's content to LLM individually, and let it analyse if it contributes in the build or not. If yes, then build it, if not then leave it as it is.
 
 
-                echo "Github Difference from last commit = $temp"
-                result=$(python -m src.main "$temp")
-                echo "GIT DIFF: $result"
+                # echo "Github Difference from last commit = $temp"
+                # result=$(python -m src.main "$temp")
+                # echo "GIT DIFF: $result"
                 repos_changed=()
                 for FILE in $temp; do
                     if [[ "$FILE" == src/* ]]; then
