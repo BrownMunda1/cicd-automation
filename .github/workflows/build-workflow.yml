@@ -76,6 +76,11 @@ jobs:
         -   id: get-changed-repos
             name: Get Changed Repositories
             run: |
+
+                files_changed=$(git diff --name-status "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
+                echo "Printing changed files names and status"
+                python -m src.main "$files_changed"
+
                 temp=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
 
 
