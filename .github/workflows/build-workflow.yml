@@ -88,7 +88,6 @@ jobs:
                 python -m src.main --modified-files "$modified_files"
                 # python -m src.main --files-changed "$files_changed" --modified-files "$modified_files"
 
-
                 # temp=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
                 # echo "Printing all changed files=$temp"
 

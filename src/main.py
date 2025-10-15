@@ -53,7 +53,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     print(testing_func(args.modified_files))
-
     # if args.files_changed:
     # process_files_changed("M\t.github/workflows/build-workflow.yml\nM\tsrc/__init__.py\nM\tsrc/main.py\nD\ttemp.txt\nR100\tgithubActionsAPIResponse.json\ttest/resources/githubActionsAPIResponse.json\nA\ttest/resources/nameStatusResponse.txt", "")
 # ['M\t.github/workflows/build-workflow.yml', 'M\tsrc/__init__.py', 'M\tsrc/main.py', 'D\ttemp.txt', 'R100\tgithubActionsAPIResponse.json\ttest/resources/githubActionsAPIResponse.json', 'A\ttest/resources/nameStatusResponse.txt']
