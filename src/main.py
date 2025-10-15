@@ -1,7 +1,15 @@
-import sys
+import argparse
 
-def testing_func(a):
-    print("Enter here")
-    return type(a), a
+def process_files_changed(git_diff: str):
+    files_diff = git_diff.split("\\n")
+    print(files_diff)
 
-print(testing_func(sys.argv[1]))
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument("--files-changed", help="The List of files changed obtained from a git diff command")
+
+    args = parser.parse_args()
+
+    if args.files_changed:
+        process_files_changed(args.files_changed)
