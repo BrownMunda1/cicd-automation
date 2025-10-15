@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-def process_files_changed(git_diff: str) -> list:
+def process_files_changed(git_diff: str, modified_files: str) -> list:
 
     monorepos_to_build = set()
     modified_files = []
@@ -46,6 +46,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     
     parser.add_argument("--files-changed", help="The List of files changed obtained from a git diff command")
+    parser.add_argument("--modified-files", help="The List of files which were modified.")
 
     args = parser.parse_args()
 
