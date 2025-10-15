@@ -43,7 +43,7 @@ def monorepo_helper(file_path: str):
     return False, None
 
 def testing_func(a):
-    print(type(a), a)
+    return (type(a), a)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     parser.add_argument("--modified-files", help="The List of files which were modified.")
 
     args = parser.parse_args()
-    testing_func(args.modified_files)
+    print(testing_func(args.modified_files))
 
     # if args.files_changed:
     # process_files_changed("M\t.github/workflows/build-workflow.yml\nM\tsrc/__init__.py\nM\tsrc/main.py\nD\ttemp.txt\nR100\tgithubActionsAPIResponse.json\ttest/resources/githubActionsAPIResponse.json\nA\ttest/resources/nameStatusResponse.txt", "")
