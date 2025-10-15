@@ -85,6 +85,7 @@ jobs:
                 echo "Printing modified files=$modified_files"
 
                 
+                python -m src.main --modified-files "$modified_files"
                 # python -m src.main --files-changed "$files_changed" --modified-files "$modified_files"
 
 
