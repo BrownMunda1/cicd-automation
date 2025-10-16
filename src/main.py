@@ -27,9 +27,9 @@ def process_files_changed(git_diff: str) -> list:
             file_path = file_diff_arr[1]
             if len(file_path.split("src")) > 1:
                 is_monorepo, monorepo_name = monorepo_helper(file_path=file_path)
-            if is_monorepo:
-                if status != "M":
-                    monorepos_to_build.add(monorepo_name)
+                if is_monorepo:
+                    if status != "M":
+                        monorepos_to_build.add(monorepo_name)
 
     return monorepos_to_build
 
