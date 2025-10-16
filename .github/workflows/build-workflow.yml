@@ -109,15 +109,15 @@ jobs:
 
 
 
-                repos_changed=()
-                for FILE in $temp; do
-                    if [[ "$FILE" == src/* ]]; then
-                        IFS='/'; arrIN=($FILE); unset IFS;
-                        repos_changed+=( ${arrIN[1]} )
-                    fi
-                done
+                # repos_changed=()
+                # for FILE in $temp; do
+                #     if [[ "$FILE" == src/* ]]; then
+                #         IFS='/'; arrIN=($FILE); unset IFS;
+                #         repos_changed+=( ${arrIN[1]} )
+                #     fi
+                # done
 
-                echo "REPOS_CHANGED=$repos_changed" >> $GITHUB_OUTPUT
+                # echo "REPOS_CHANGED=$repos_changed" >> $GITHUB_OUTPUT
 
         -   id: build-individual-projects
             name: Build Projects
