@@ -2,12 +2,11 @@ import json
 import argparse
 from pathlib import Path
 
-def process_files_changed(git_diff: str, modified_files: str) -> list:
+def process_files_changed(git_diff: str) -> list:
 
     monorepos_to_build = set()
 
-    modified_files = modified_files.split("\n")
-
+    ##### HANDLE OTHERS #####
     files_diff = git_diff.split("\n")
 
     for file_diff in files_diff:
@@ -34,6 +33,22 @@ def process_files_changed(git_diff: str, modified_files: str) -> list:
 
     return monorepos_to_build
 
+def process_modified_files(modified_files: dict) -> list:
+    ##### HANDLE MODIFIED FILES #####
+
+    monorepos_to_build = set()
+
+    for file, diff in modified_files.items():
+        is_monorepo, monorepo_name = monorepo_helper(file)
+        if not is_monorepo:
+            continue
+        else:
+            ## Pass diff to LLM and determine if the change is eligible to be built or not
+            monorepos_to_build.add(monorepo_name)
+            pass
+
+    return monorepos_to_build
+
 def monorepo_helper(file_path: str):
     temp = file_path.split("src")
     monorepo_name = temp[1].split("/")[0]
@@ -47,18 +62,28 @@ def testing_func(a):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    
-    # parser.add_argument("--files-changed", help="The List of files changed obtained from a git diff command")
+
+    parser.add_argument("--files-changed", help="The List of files changed obtained from a git diff command")
     # parser.add_argument("--modified-files", help="The List of files which were modified.")
-    parser.add_argument('--modified-files-json')
+    parser.add_argument("--modified-files-json", help="JSON File where keys are the file paths which were modified, and the values are the git diffs of respective files")
 
     args = parser.parse_args()
     # print(testing_func(args.modified_files))
+
+    if args.files_changed:
+        files_changed = args.files_changed
 
     if args.modified_files_json:
         with open(args.modified_files_json, 'r', encoding='utf-8') as fh:
             modified_files = json.load(fh)
             print("Modified Files:", modified_files)
+    
+    result1: set = process_files_changed(git_diff=files_changed)
+    result2: set = process_modified_files(modified_files=modified_files)
+
+    result = result1.union(result2)
+
+    print(result)
 
     # if args.files_changed:
         # process_files_changed("M\t.github/workflows/build-workflow.yml\nM\tsrc/__init__.py\nM\tsrc/main.py\nD\ttemp.txt\nR100\tgithubActionsAPIResponse.json\ttest/resources/githubActionsAPIResponse.json\nA\ttest/resources/nameStatusResponse.txt", ".github/workflows/build-workflow.yml\nsrc/main.py")

@@ -77,7 +77,6 @@ jobs:
             name: Get Changed Repositories
             run: |
 
-                # # files_changed=$(git diff --name-status "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
                 # # echo "Printing changed files names and status"
                 # # python -m src.main --files-changed "$files_changed"
                 # modified_files=$(git diff --name-only --diff-filter=M "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
@@ -133,6 +132,10 @@ jobs:
 
                 # # echo "REPOS_CHANGED=$repos_changed" >> $GITHUB_OUTPUT
 
+
+                
+                files_changed=$(git diff --name-status "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
+
                 modified_base="${{ steps.get-last-successful-workflow-run.outputs.result }}"
                 current="${{ github.sha }}"
 
@@ -167,7 +170,7 @@ jobs:
                 PY
 
                 # consume the JSON in your python module (or pass the path)
-                python -m src.main --modified-files-json "$GITHUB_WORKSPACE/modified_files.json"
+                python -m src.main --files-changed "$files_changed" --modified-files-json "$GITHUB_WORKSPACE/modified_files.json"
 
         -   id: build-individual-projects
             name: Build Projects
