@@ -53,7 +53,7 @@ def monorepo_helper(file_path: str):
     temp = file_path.split("src")
     monorepo_name = temp[1].split("/")[0]
     repo_path = temp[0] + monorepo_name
-    if Path.is_dir(repo_path):
+    if Path.is_dir(Path(repo_path)):
         return True, monorepo_name
     return False, None
 
