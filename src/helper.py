@@ -31,13 +31,14 @@ def build_checker(git_diff: str):
     prompt = ChatPromptTemplate.from_messages(
         [
             ("system", system_prompt),
+            ("user", "{git_diff}")
         ]
     )
 
     llm_structured = llm.with_structured_output(BuildStructuredOutput)
-    
+
     chain = prompt | llm_structured
 
-    result = chain.invoke(git_diff)
+    result = chain.invoke({"git_diff": git_diff})
 
     return result
