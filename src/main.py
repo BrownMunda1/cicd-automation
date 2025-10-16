@@ -1,3 +1,4 @@
+import json
 import argparse
 from pathlib import Path
 
@@ -48,10 +49,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     
     # parser.add_argument("--files-changed", help="The List of files changed obtained from a git diff command")
-    parser.add_argument("--modified-files", help="The List of files which were modified.")
+    # parser.add_argument("--modified-files", help="The List of files which were modified.")
+    parser.add_argument('--modified-files-json')
 
     args = parser.parse_args()
-    print(testing_func(args.modified_files))
+    # print(testing_func(args.modified_files))
+
+    if args.modified_files_json:
+        with open(args.modified_files_json, 'r', encoding='utf-8') as fh:
+            modified_files = json.load(fh)
+            print("Modified Files:", modified_files)
 
     # if args.files_changed:
         # process_files_changed("M\t.github/workflows/build-workflow.yml\nM\tsrc/__init__.py\nM\tsrc/main.py\nD\ttemp.txt\nR100\tgithubActionsAPIResponse.json\ttest/resources/githubActionsAPIResponse.json\nA\ttest/resources/nameStatusResponse.txt", ".github/workflows/build-workflow.yml\nsrc/main.py")

@@ -77,61 +77,97 @@ jobs:
             name: Get Changed Repositories
             run: |
 
-                # files_changed=$(git diff --name-status "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
-                # echo "Printing changed files names and status"
-                # python -m src.main --files-changed "$files_changed"
-                modified_files=$(git diff --name-only --diff-filter=M "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
+                # # files_changed=$(git diff --name-status "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
+                # # echo "Printing changed files names and status"
+                # # python -m src.main --files-changed "$files_changed"
+                # modified_files=$(git diff --name-only --diff-filter=M "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
 
-                # echo "Printing modified files=$modified_files"
+                # # echo "Printing modified files=$modified_files"
 
                 
-                # python -m src.main --modified-files "$modified_files"
-                # python -m src.main --files-changed "$files_changed" --modified-files "$modified_files"
+                # # python -m src.main --modified-files "$modified_files"
+                # # python -m src.main --files-changed "$files_changed" --modified-files "$modified_files"
 
-                # temp=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
-                # echo "Printing all changed files=$temp"
-
-
-                # Get the names of all the files changed. Filter out non-important ones manually. Then Provide each file's content to LLM individually, and let it analyse if it contributes in the build or not. If yes, then build it, if not then leave it as it is.
+                # # temp=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
+                # # echo "Printing all changed files=$temp"
 
 
-                # echo "Github Difference from last commit = $temp"
-                # result=$(python -m src.main "$temp")
-                # echo "GIT DIFF: $result"
-                # declare -A modified_files_dict
+                # # Get the names of all the files changed. Filter out non-important ones manually. Then Provide each file's content to LLM individually, and let it analyse if it contributes in the build or not. If yes, then build it, if not then leave it as it is.
+
+
+                # # echo "Github Difference from last commit = $temp"
+                # # result=$(python -m src.main "$temp")
+                # # echo "GIT DIFF: $result"
+                # # declare -A modified_files_dict
+                # # for FILE in $modified_files; do
+                # #     file_diff=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}" -- "$FILE") 
+
+                # #     modified_files_dict["$FILE"]="$file_diff"
+                # # done
+
+                # modified_files_diff=""
                 # for FILE in $modified_files; do
-                #     file_diff=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}" -- "$FILE") 
-
-                #     modified_files_dict["$FILE"]="$file_diff"
+                #     file_diff=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}" -- "$FILE")
+                #     # append the diff (preserve newlines)
+                #     modified_files_diff+=$'STARTTTTTTTT'"$file_diff"$'ENDDDDDDDDDDDDDDD'
                 # done
 
-                modified_files_diff=""
-                for FILE in $modified_files; do
-                    file_diff=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}" -- "$FILE")
-                    # append the diff (preserve newlines)
-                    modified_files_diff+=$'STARTTTTTTTT'"$file_diff"$'ENDDDDDDDDDDDDDDD'
-                done
+                # echo "Printing modified files diff:"
+                # # printf '%s' "$modified_files_diff" | sed -n '1,200p'
 
-                echo "Printing modified files diff:"
-                # printf '%s' "$modified_files_diff" | sed -n '1,200p'
+                # # pass the multiline string to Python (quotes preserve newlines)
+                # python -m src.main --modified-files "$modified_files_diff"
 
-                # pass the multiline string to Python (quotes preserve newlines)
-                python -m src.main --modified-files "$modified_files_diff"
-
-                # echo "Printing modified files dict"
-                # python -m src.main --modified-files "$modified_files_dict"
+                # # echo "Printing modified files dict"
+                # # python -m src.main --modified-files "$modified_files_dict"
 
 
 
-                # repos_changed=()
-                # for FILE in $temp; do
-                #     if [[ "$FILE" == src/* ]]; then
-                #         IFS='/'; arrIN=($FILE); unset IFS;
-                #         repos_changed+=( ${arrIN[1]} )
-                #     fi
-                # done
+                # # repos_changed=()
+                # # for FILE in $temp; do
+                # #     if [[ "$FILE" == src/* ]]; then
+                # #         IFS='/'; arrIN=($FILE); unset IFS;
+                # #         repos_changed+=( ${arrIN[1]} )
+                # #     fi
+                # # done
 
-                # echo "REPOS_CHANGED=$repos_changed" >> $GITHUB_OUTPUT
+                # # echo "REPOS_CHANGED=$repos_changed" >> $GITHUB_OUTPUT
+
+                modified_base="${{ steps.get-last-successful-workflow-run.outputs.result }}"
+                current="${{ github.sha }}"
+
+                export BASE_SHA="$modified_base"
+                export HEAD_SHA="$current"
+
+                # Build a JSON file mapping filename -> diff (handles quoting/newlines safely)
+                python - <<'PY'
+                import os, json, subprocess, sys
+
+                base = os.environ['BASE_SHA']
+                head = os.environ['HEAD_SHA']
+                workspace = os.environ.get('GITHUB_WORKSPACE', '.')
+
+                # list modified files
+                p = subprocess.run(['git','diff','--name-only','--diff-filter=M', base, head],
+                                capture_output=True, text=True, check=True)
+                files = [f for f in p.stdout.splitlines() if f.strip()]
+
+                result = {}
+                for f in files:
+                    # get per-file diff
+                    d = subprocess.run(['git','diff','--unified=0','--no-prefix', base, head, '--', f],
+                                    capture_output=True, text=True, check=True)
+                    result[f] = d.stdout
+
+                out_path = os.path.join(workspace, 'modified_files.json')
+                with open(out_path, 'w', encoding='utf-8') as fh:
+                    json.dump(result, fh, ensure_ascii=False)
+
+                print(out_path)
+                PY
+
+                # consume the JSON in your python module (or pass the path)
+                python -m src.main --modified-files-json "$GITHUB_WORKSPACE/modified_files.json"
 
         -   id: build-individual-projects
             name: Build Projects
