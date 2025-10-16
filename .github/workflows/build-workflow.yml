@@ -109,7 +109,7 @@ jobs:
                 for FILE in $modified_files; do
                     file_diff=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}" -- "$FILE")
                     # append the diff (preserve newlines)
-                    modified_files_diff+="$file_diff"$'\n'
+                    modified_files_diff+=$'STARTTTTTTTT'"$file_diff"$'ENDDDDDDDDDDDDDDD'
                 done
 
                 echo "Printing modified files diff (first 200 lines):"
