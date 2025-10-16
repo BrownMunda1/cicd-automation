@@ -77,7 +77,7 @@ if __name__ == "__main__":
     if args.modified_files_json:
         with open(args.modified_files_json, 'r', encoding='utf-8') as fh:
             modified_files = json.load(fh)
-            print("Modified Files:", modified_files)
+            # print("Modified Files:", modified_files)
     
     result1: set = process_files_changed(git_diff=files_changed)
     result2: set = process_modified_files(modified_files=modified_files)
