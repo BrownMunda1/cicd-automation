@@ -51,10 +51,11 @@ def process_modified_files(modified_files: dict) -> list:
 
 def monorepo_helper(file_path: str):
     temp = file_path.split("src")
-    monorepo_name = temp[1].split("/")[0]
-    repo_path = temp[0] + monorepo_name
-    if Path.is_dir(Path(repo_path)):
-        return True, monorepo_name
+    if len(temp) > 1:
+        monorepo_name = temp[1].split("/")[1]
+        repo_path = temp[0] + "src/" + monorepo_name
+        if Path.is_dir(Path(repo_path)):
+            return True, monorepo_name
     return False, None
 
 def testing_func(a):
