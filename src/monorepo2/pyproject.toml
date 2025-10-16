@@ -6,3 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "monorepo2"
 requires-python = ">=3.12"
 dynamic = ["version"]
+dependencies = [
+
+]
