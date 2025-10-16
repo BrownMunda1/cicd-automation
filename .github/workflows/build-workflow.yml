@@ -112,8 +112,8 @@ jobs:
                     modified_files_diff+=$'STARTTTTTTTT'"$file_diff"$'ENDDDDDDDDDDDDDDD'
                 done
 
-                echo "Printing modified files diff (first 200 lines):"
-                printf '%s' "$modified_files_diff" | sed -n '1,200p'
+                echo "Printing modified files diff:"
+                # printf '%s' "$modified_files_diff" | sed -n '1,200p'
 
                 # pass the multiline string to Python (quotes preserve newlines)
                 python -m src.main --modified-files "$modified_files_diff"
