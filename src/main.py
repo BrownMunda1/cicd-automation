@@ -2,6 +2,8 @@ import json
 import argparse
 from pathlib import Path
 
+from src import helper
+
 def process_files_changed(git_diff: str) -> list:
 
     monorepos_to_build = set()
@@ -44,8 +46,10 @@ def process_modified_files(modified_files: dict) -> list:
             continue
         else:
             ## Pass diff to LLM and determine if the change is eligible to be built or not
-            monorepos_to_build.add(monorepo_name)
-            pass
+            # Import the answer from helper.py, process it and move forward
+            result = helper.build_checker(git_diff = diff)
+            if result.should_build.lower() == "yes":
+                monorepos_to_build.add(monorepo_name)
 
     return monorepos_to_build
 
