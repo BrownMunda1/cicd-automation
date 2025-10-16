@@ -34,8 +34,8 @@ def build_checker(git_diff: str):
         ]
     )
 
-    llm_structured = llm.with_structured_output(BuildStructuredOutput).invoke()
-
+    llm_structured = llm.with_structured_output(BuildStructuredOutput)
+    
     chain = prompt | llm_structured
 
     result = chain.invoke(git_diff)
