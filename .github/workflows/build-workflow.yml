@@ -169,6 +169,7 @@ jobs:
                 PY
 
                 # consume the JSON in your python module (or pass the path)
+                source .venv/bin/activate
                 monorepos_to_build=$(python -m src.main --files-changed "$files_changed" --modified-files-json "$GITHUB_WORKSPACE/modified_files.json")
 
                 # echo "REPOS_TO_BUILD=$monorepos_to_build" >> $GITHUB_OUTPUT
