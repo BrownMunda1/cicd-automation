@@ -182,15 +182,16 @@ jobs:
         -   id: build-individual-projects
             name: Build Projects
             run: |
+                cd src
                 for REPO in ${{ steps.get-changed-repos.outputs.REPOS_TO_BUILD }}; do
-                    cd src/$REPO
+                    cd $REPO
                     uv sync
                     if [ -e requirements.txt ]; then
                         uv add -r requirements.txt
                     fi
                     uv build
-                    temp=$(python -m main I am Ankit)
-                    echo "Python Script Answer: $temp"
+                    # temp=$(python -m main I am Ankit)
+                    # echo "Python Script Answer: $temp"
                     cd ..
                     echo "$REPO Built successfully"
                 done
