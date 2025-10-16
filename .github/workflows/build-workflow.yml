@@ -84,7 +84,8 @@ jobs:
                     file_diff=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}") "$FILE"
 
                     modified_files_dict["$FILE"]=file_diff
-                
+                done
+
                 echo "Printing modified files dict"
                 python -m src.main --modified-files "$modified_files_dict"
 
