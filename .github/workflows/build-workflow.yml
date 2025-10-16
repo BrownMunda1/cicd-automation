@@ -100,7 +100,7 @@ jobs:
                 # echo "GIT DIFF: $result"
                 declare -A modified_files_dict
                 for FILE in $modified_files; do
-                    file_diff=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}" "$FILE") 
+                    file_diff=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}" -- "$FILE") 
 
                     modified_files_dict["$FILE"]="$file_diff"
                 done
