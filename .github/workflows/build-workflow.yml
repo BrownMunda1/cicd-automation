@@ -77,15 +77,15 @@ jobs:
             name: Get Changed Repositories
             run: |
 
-                files_changed=$(git diff --name-status "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
+                # files_changed=$(git diff --name-status "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
                 # echo "Printing changed files names and status"
                 # python -m src.main --files-changed "$files_changed"
                 modified_files=$(git diff --name-only --diff-filter=M "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
 
-                echo "Printing modified files=$modified_files"
+                # echo "Printing modified files=$modified_files"
 
                 
-                python -m src.main --modified-files "$modified_files"
+                # python -m src.main --modified-files "$modified_files"
                 # python -m src.main --files-changed "$files_changed" --modified-files "$modified_files"
 
                 # temp=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}")
@@ -98,6 +98,17 @@ jobs:
                 # echo "Github Difference from last commit = $temp"
                 # result=$(python -m src.main "$temp")
                 # echo "GIT DIFF: $result"
+                declare -A modified_files_dict
+                for FILE in $modified_files; do
+                    file_diff=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}") "$FILE"
+
+                    modified_files_dict["$FILE"]=file_diff
+                
+                echo "Printing modified files dict"
+                python -m src.main --modified-files "$modified_files_dict"
+
+
+
                 repos_changed=()
                 for FILE in $temp; do
                     if [[ "$FILE" == src/* ]]; then

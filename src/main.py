@@ -4,7 +4,8 @@ from pathlib import Path
 def process_files_changed(git_diff: str, modified_files: str) -> list:
 
     monorepos_to_build = set()
-    modified_files = []
+
+    modified_files = modified_files.split("\n")
 
     files_diff = git_diff.split("\n")
 
@@ -29,10 +30,8 @@ def process_files_changed(git_diff: str, modified_files: str) -> list:
             if is_monorepo:
                 if status != "M":
                     monorepos_to_build.add(monorepo_name)
-                else:
-                    modified_files.append(monorepo_name)
 
-    return monorepos_to_build, modified_files
+    return monorepos_to_build
 
 def monorepo_helper(file_path: str):
     temp = file_path.split("src")
@@ -53,6 +52,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     print(testing_func(args.modified_files))
+
     # if args.files_changed:
-    # process_files_changed("M\t.github/workflows/build-workflow.yml\nM\tsrc/__init__.py\nM\tsrc/main.py\nD\ttemp.txt\nR100\tgithubActionsAPIResponse.json\ttest/resources/githubActionsAPIResponse.json\nA\ttest/resources/nameStatusResponse.txt", "")
+        # process_files_changed("M\t.github/workflows/build-workflow.yml\nM\tsrc/__init__.py\nM\tsrc/main.py\nD\ttemp.txt\nR100\tgithubActionsAPIResponse.json\ttest/resources/githubActionsAPIResponse.json\nA\ttest/resources/nameStatusResponse.txt", ".github/workflows/build-workflow.yml\nsrc/main.py")
 # ['M\t.github/workflows/build-workflow.yml', 'M\tsrc/__init__.py', 'M\tsrc/main.py', 'D\ttemp.txt', 'R100\tgithubActionsAPIResponse.json\ttest/resources/githubActionsAPIResponse.json', 'A\ttest/resources/nameStatusResponse.txt']
