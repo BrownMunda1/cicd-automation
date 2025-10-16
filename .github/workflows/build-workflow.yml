@@ -98,15 +98,28 @@ jobs:
                 # echo "Github Difference from last commit = $temp"
                 # result=$(python -m src.main "$temp")
                 # echo "GIT DIFF: $result"
-                declare -A modified_files_dict
-                for FILE in $modified_files; do
-                    file_diff=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}" -- "$FILE") 
+                # declare -A modified_files_dict
+                # for FILE in $modified_files; do
+                #     file_diff=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}" -- "$FILE") 
 
-                    modified_files_dict["$FILE"]="$file_diff"
+                #     modified_files_dict["$FILE"]="$file_diff"
+                # done
+
+                modified_files_diff=""
+                for FILE in $modified_files; do
+                    file_diff=$(git diff --unified=0 --no-prefix "${{ steps.get-last-successful-workflow-run.outputs.result }}" "${{ github.sha }}" -- "$FILE")
+                    # append the diff (preserve newlines)
+                    modified_files_diff+="$file_diff"$'\n'
                 done
 
-                echo "Printing modified files dict"
-                python -m src.main --modified-files "$modified_files_dict"
+                echo "Printing modified files diff (first 200 lines):"
+                printf '%s' "$modified_files_diff" | sed -n '1,200p'
+
+                # pass the multiline string to Python (quotes preserve newlines)
+                python -m src.main --modified-files "$modified_files_diff"
+
+                # echo "Printing modified files dict"
+                # python -m src.main --modified-files "$modified_files_dict"
 
 
 
