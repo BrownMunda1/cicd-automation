@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     result = result1.union(result2)
 
-    print(result)
+    print(list(result))
 
     # if args.files_changed:
         # process_files_changed("M\t.github/workflows/build-workflow.yml\nM\tsrc/__init__.py\nM\tsrc/main.py\nD\ttemp.txt\nR100\tgithubActionsAPIResponse.json\ttest/resources/githubActionsAPIResponse.json\nA\ttest/resources/nameStatusResponse.txt", ".github/workflows/build-workflow.yml\nsrc/main.py")
