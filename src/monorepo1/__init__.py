@@ -1,1 +1,1 @@
-print("Hello World from monorepo1")
+print("Hello World from python monorepo1")

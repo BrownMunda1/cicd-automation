@@ -127,13 +127,7 @@ jobs:
         -   id: reason-display
             name: Display Reason for Build
             run: |
-                REASONS="${{ steps.get-changed-repos.outputs.REASONS }}"
-                if [ -n "$REASONS" ]; then
-
-                    echo "Reasons for building or not ---- ${{ steps.get-changed-repos.outputs.REASONS }}"
-                else
-                    echo "No change in any monorepo code"
-                fi
+                echo "Reasons for building or not ---- ${{ steps.get-changed-repos.outputs.REASONS }}"
 
         -   id: build-individual-projects
             name: Build Projects
