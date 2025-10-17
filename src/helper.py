@@ -17,7 +17,7 @@ Do not be very restrictive/specific, rather be lineant and find situations which
 
 def build_checker(git_diff: str):
 
-    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
 
     class BuildStructuredOutput(BaseModel):
 
