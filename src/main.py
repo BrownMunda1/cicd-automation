@@ -1,3 +1,4 @@
+import sys
 import json
 import argparse
 from pathlib import Path
@@ -45,11 +46,10 @@ def process_modified_files(modified_files: dict) -> list:
         if not is_monorepo:
             continue
         else:
-            ## Pass diff to LLM and determine if the change is eligible to be built or not
-            # Import the answer from helper.py, process it and move forward
             result = helper.build_checker(git_diff = diff)
             if result.should_build.lower() == "yes":
                 monorepos_to_build.add(monorepo_name)
+                print("Reason:",result.reason, file=sys.stderr)
 
     return monorepos_to_build
 
@@ -69,11 +69,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--files-changed", help="The List of files changed obtained from a git diff command")
-    # parser.add_argument("--modified-files", help="The List of files which were modified.")
+
     parser.add_argument("--modified-files-json", help="JSON File where keys are the file paths which were modified, and the values are the git diffs of respective files")
 
     args = parser.parse_args()
-    # print(testing_func(args.modified_files))
 
     if args.files_changed:
         files_changed = args.files_changed
@@ -81,8 +80,8 @@ if __name__ == "__main__":
     if args.modified_files_json:
         with open(args.modified_files_json, 'r', encoding='utf-8') as fh:
             modified_files = json.load(fh)
-            # print("Modified Files:", modified_files)
-    
+
+
     result1: set = process_files_changed(git_diff=files_changed)
     result2: set = process_modified_files(modified_files=modified_files)
 
@@ -91,7 +90,3 @@ if __name__ == "__main__":
     monorepos = ' '.join(res for res in list(result))
 
     print(monorepos)
-
-    # if args.files_changed:
-        # process_files_changed("M\t.github/workflows/build-workflow.yml\nM\tsrc/__init__.py\nM\tsrc/main.py\nD\ttemp.txt\nR100\tgithubActionsAPIResponse.json\ttest/resources/githubActionsAPIResponse.json\nA\ttest/resources/nameStatusResponse.txt", ".github/workflows/build-workflow.yml\nsrc/main.py")
-# ['M\t.github/workflows/build-workflow.yml', 'M\tsrc/__init__.py', 'M\tsrc/main.py', 'D\ttemp.txt', 'R100\tgithubActionsAPIResponse.json\ttest/resources/githubActionsAPIResponse.json', 'A\ttest/resources/nameStatusResponse.txt']
