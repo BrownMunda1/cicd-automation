@@ -127,7 +127,7 @@ jobs:
         -   id: reason-display
             name: Display Reason for Build
             run: |
-                echo "Reasons for building or not ---- ${{ steps.get-changed-repos.outputs.REASONS }}"
+                echo "Reasons for building or not ---- "${{ steps.get-changed-repos.outputs.REASONS }}""
 
         -   id: build-individual-projects
             name: Build Projects
