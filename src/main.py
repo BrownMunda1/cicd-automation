@@ -51,7 +51,7 @@ def process_modified_files(modified_files: dict) -> list:
             result = helper.build_checker(git_diff = diff)
             if result.should_build.lower() == "yes":
                 monorepos_to_build.add(monorepo_name)
-            if not getattr(reasons, monorepo_name):
+            if not getattr(reasons, monorepo_name, None):
                 reasons[monorepo_name] = ""
             reasons[monorepo_name]+=result.reason + "\n"
 
