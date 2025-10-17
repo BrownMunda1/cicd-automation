@@ -116,15 +116,24 @@ jobs:
 
                 # consume the JSON in your python module (or pass the path)
                 source .venv/bin/activate
-                monorepos_to_build=$(python -m src.main --files-changed "$files_changed" --modified-files-json "$GITHUB_WORKSPACE/modified_files.json")
-
+                python -m src.main --files-changed "$files_changed" --modified-files-json "$GITHUB_WORKSPACE/modified_files.json"
                 # echo "REPOS_TO_BUILD=$monorepos_to_build" >> $GITHUB_OUTPUT
-                {
-                  echo "REPOS_TO_BUILD<<EOF"
-                  echo "$monorepos_to_build"
-                  echo "EOF"
-                } >> $GITHUB_OUTPUT
+                # {
+                #   echo "REPOS_TO_BUILD<<EOF"
+                #   echo "$monorepos_to_build"
+                #   echo "EOF"
+                # } >> $GITHUB_OUTPUT
 
+        -   id: reason-display
+            name: Display Reason for Build
+            run: |
+                REASONS="${{ steps.get-changed-repos.outputs.REASONS }}"
+                if [ -n "$REASONS" ]; then
+                    
+                    echo "Reasons for building or not ---- ${{ steps.get-changed-repos.outputs.REASONS }}"
+                else
+                    echo "No change in any monorepo code"
+                fi
 
         -   id: build-individual-projects
             name: Build Projects

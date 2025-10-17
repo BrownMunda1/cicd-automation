@@ -1,3 +1,4 @@
+import os
 import sys
 import json
 import argparse
@@ -40,6 +41,7 @@ def process_modified_files(modified_files: dict) -> list:
     ##### HANDLE MODIFIED FILES #####
 
     monorepos_to_build = set()
+    reasons = {}
 
     for file, diff in modified_files.items():
         is_monorepo, monorepo_name = monorepo_helper(file)
@@ -49,9 +51,11 @@ def process_modified_files(modified_files: dict) -> list:
             result = helper.build_checker(git_diff = diff)
             if result.should_build.lower() == "yes":
                 monorepos_to_build.add(monorepo_name)
-                print("Reason:",result.reason, file=sys.stderr)
+            if not getattr(reasons, monorepo_name):
+                reasons[monorepo_name] = ""
+            reasons[monorepo_name]+=result.reason + "\n"
 
-    return monorepos_to_build
+    return monorepos_to_build, reasons
 
 def monorepo_helper(file_path: str):
     temp = file_path.split("src")
@@ -83,10 +87,14 @@ if __name__ == "__main__":
 
 
     result1: set = process_files_changed(git_diff=files_changed)
-    result2: set = process_modified_files(modified_files=modified_files)
+    result2, reasons = process_modified_files(modified_files=modified_files)
 
     result = result1.union(result2)
 
     monorepos = ' '.join(res for res in list(result))
 
-    print(monorepos)
+    with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+        f.write(f"REPOS_TO_BUILD={monorepos}\n")
+        f.write(f"REASONS={str(reasons)}\n")
+
+    # print(monorepos)
